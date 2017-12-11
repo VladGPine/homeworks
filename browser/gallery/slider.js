@@ -13,13 +13,14 @@ const prevImg = document.getElementById('prevPhoto');
 
 nextImg.onclick = function () {
 	slider.src = images[img];
-	if (img < images.length) img += 1;
+	if (img < images.length) img++;
 	if (img === images.length) img = 0;
 };
 
 prevImg.onclick = function () {
 	slider.src = images[img];
-	if (img < images.length) img -= 1;
-	// if (img === 0) img = images.length - 1;
+	if (img === 0) img = images.length - 1;
+	if (img < images.length) img--;
+
 
 };
