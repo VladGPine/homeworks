@@ -1,10 +1,15 @@
-var slider = document.getElementById('slider');
-const images = [];
+const slider = document.getElementById('slider');
+const images = [
+	'i/airmax.png',
+	'i/airmax-jump.png',
+	'i/airmax-on-foot.png',
+	'i/airmax-playground.png',
+	'i/airmax-top-view.png'
+];
 let img = 0;
-
-images.push('i/airmax.png', 'i/airmax-jump.png', 'i/airmax-on-foot.png', 'i/airmax-playground.png', 'i/airmax-top-view.png');
 
 setInterval(() => {
 	slider.src = images[img];
-img === 4 ? img = 0 : img += 1;
+		if (img < images.length) img +=1;
+		if (img === images.length) img = 0;
 }, 5000);
