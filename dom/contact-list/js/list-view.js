@@ -35,4 +35,12 @@ function init() {
   container.querySelector('.back').addEventListener('click', backClick);
 }
 
+function showContacts() {
+	let contacts = JSON.parse(loadContacts());
+	return contacts.reduce(function(tempItem,curContact){
+		return tempItem+`<li data-email="${curContact.email}" data-phone="${curContact.phone}"><strong>${curContact.name}</strong></li>`;
+	},'');
+}
+
 document.addEventListener('DOMContentLoaded', init);
+document.querySelector('ul.contacts-list').innerHTML += showContacts();
