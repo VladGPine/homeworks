@@ -12,15 +12,20 @@ const nextImg = document.getElementById('nextPhoto');
 const prevImg = document.getElementById('prevPhoto');
 
 nextImg.onclick = function () {
+	if (img === (images.length - 1)) {
+		img = 0;
+	} else {
+		img++;
+	};
 	slider.src = images[img];
-	if (img < images.length) img++;
-	if (img === images.length) img = 0;
 };
 
 prevImg.onclick = function () {
+	if (img === 0) {
+		img = images.length - 1;
+	} else {
+		img--;
+	}
 	slider.src = images[img];
-	if (img === 0) img = images.length - 1;
-	if (img < images.length) img--;
-
 
 };
