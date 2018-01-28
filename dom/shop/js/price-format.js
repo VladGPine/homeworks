@@ -2,17 +2,20 @@ function getPriceFormatted(value) {
   return  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-const cartCount = document.querySelector('#cart-count');
-const totalPrice = document.querySelector('#cart-total-price');
+const buttons = document.querySelectorAll('.add'),
+			countItems = document.querySelector('#cart-count'),
+			totalPrice = document.querySelector('#cart-total-price');
 
-function addItem() {
-	let currCount = +cartCount.innerHTML + 1;
-	cartCount.innerHTML = currCount;
-	let currPrice = totalPrice.dataset.price ? +totalPrice.dataset.price : 0;
-	currPrice += +this.dataset.price;
-	totalPrice.dataset.price = currPrice;
-	totalPrice.innerHTML = getPriceFormatted(currPrice);
+let currentItems = 0,
+		currentPrice = 0;
+
+function addToCart(i) {
+	currentItems += 1;
+	currentPrice += parseInt(i.target.dataset.price);
+	countItems.innerText = currentItems;
+	totalPrice.innerText = getPriceFormatted(currentPrice);
 }
 
-let items = Array.from(document.querySelectorAll('button.add'));
-items.forEach(item => item.addEventListener('click', addItem));
+for (const button of buttons) {
+	button.addEventListener('click', addToCart);
+}
