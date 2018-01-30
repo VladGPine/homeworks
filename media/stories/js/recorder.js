@@ -37,10 +37,46 @@ function createThumbnail(video) {
 }
 
 function record(app) {
-  return new Promise((done, fail) => {
-    app.mode = 'preparing';
-    setTimeout(() => {
-      fail('Не удалось записать видео');
-    }, app.limit);
-  });
+	app.mode = 'preparing';
+	return new Promise((done, fail) => {
+		const resolvedData = {};
+
+		navigator.mediaDevices
+			.getUserMedia(app.config)
+			.then((stream) => {
+				let recorder = new MediaRecorder(stream);
+				const video = document.createElement('video');
+				video.src = URL.createObjectURL(stream);
+				app.preview.srcObject = stream;
+				app.mode = 'recording';
+
+				let chunks = [];
+				recorder.addEventListener('dataavailable', (e) => chunks.push(e.data));
+				recorder.addEventListener('stop', (e) => {
+					const recorded = new Blob(chunks, { 'type' : recorder.mimeType });
+					chunks = null;
+					recorder = stream = app.preview.srcObject = null;
+
+					createThumbnail(recorded)
+						.then(thumbnailBlob => {
+							resolvedData.video = recorded;
+							resolvedData.frame = thumbnailBlob;
+							app.mode = 'sending';
+							done(resolvedData);
+						})
+						.catch(err => {
+							throw new Error(err.message);
+						});
+				});
+
+				recorder.start(1000);
+
+				setTimeout(function () {
+					recorder.stop();
+					stream.getVideoTracks().forEach(track => track.stop());
+				}, app.limit);
+
+			})
+			.catch(err => console.error('Возникла ошибка: ', err.message));
+	});
 }
